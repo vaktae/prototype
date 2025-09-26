@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLearn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap');
+        body {
+            font-family: 'Orbitron', monospace;
+            background: 
+                linear-gradient(45deg, #0d4f3c 0%, #1a6b4f 25%, #2d8f5f 50%, #1a6b4f 75%, #0d4f3c 100%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="pixel" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="%230d4f3c"/><rect width="5" height="5" fill="%231a6b4f"/><rect x="5" y="5" width="5" height="5" fill="%231a6b4f"/></pattern></defs><rect width="100" height="100" fill="url(%23pixel)"/></svg>');
+            background-size: 100% 100%, 20px 20px;
+            color: #f5f5f5;
+            image-rendering: pixelated;
+        }
+        .glow-btn {
+            box-shadow: 0 0 15px rgba(45, 143, 95, 0.5);
+            transition: all 0.3s ease;
+            border: 2px solid #2d8f5f;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 25px rgba(45, 143, 95, 0.8);
+            background: rgba(45, 143, 95, 0.1);
+        }
+        .progress-bar {
+            height: 10px;
+            border-radius: 0;
+            background: linear-gradient(90deg, #2d8f5f 0%, #1a6b4f 100%);
+            transition: width 0.5s ease;
+            border: 1px solid #0d4f3c;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-green-500 to-sky-400" style="font-family: 'Press Start 2P', monospace; text-shadow: 2px 2px 0px #0d4f3c;">EcoLearn</span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="index.html" class="text-green-400 px-3 py-2 rounded-md text-sm font-medium" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">🏠 VILLAGE</a>
+                            <a href="games.html" class="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium" style="font-family: 'Press Start 2P', monospace; font-size: 8px;"><i data-feather="gamepad-2" class="w-4 h-4 mr-1 inline"></i> QUESTS</a>
+                            <a href="profile.html" class="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium" style="font-family: 'Press Start 2P', monospace; font-size: 8px;"><i data-feather="user" class="w-4 h-4 mr-1 inline"></i> HERO</a>
+                            <a href="leaderboard.html" class="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">🏆 GUILD</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <div class="ml-3 relative">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium text-green-300" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">ECO XP: <span id="xp-home">0</span></span>
+                                <span class="text-sm font-medium text-green-400" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">LVL: <span id="level-home">1</span></span>
+                                <a href="profile.html"><img class="h-8 w-8 rounded-full" src="http://static.photos/people/200x200/1" alt="Profile"></a>
+                                <a href="signin.html" class="text-green-400 hover:text-green-300 text-sm font-medium ml-2">Sign In</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" class="bg-gray-900 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
+                        <i data-feather="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html" class="text-green-400 hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">🏠 VILLAGE</a>
+                <a href="games.html" class="text-green-300 hover:text-green-400 block px-3 py-2 rounded-md text-base font-medium" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">🎮 QUESTS</a>
+                <a href="profile.html" class="text-green-300 hover:text-green-400 block px-3 py-2 rounded-md text-base font-medium" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">👤 HERO</a>
+                <a href="leaderboard.html" class="text-green-300 hover:text-green-400 block px-3 py-2 rounded-md text-base font-medium" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">🏆 GUILD</a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-700">
+                <div class="flex items-center px-5">
+                    <div class="flex-shrink-0">
+                        <img class="h-10 w-10 rounded-full" src="http://static.photos/people/200x200/1" alt="Profile">
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium text-green-400" style="font-family: 'Press Start 2P', monospace; font-size: 10px;">GUEST HERO</div>
+                        <div class="text-sm font-medium text-green-300" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">LVL <span id="mobile-level">1</span></div>
+                    </div>
+                </div>
+            <div class="mt-3 px-2 space-y-1">
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-green-300 hover:text-green-400 hover:bg-gray-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">ECO XP: <span id="mobile-xp">0</span></a>
+                <a href="signin.html" class="block px-3 py-2 rounded-md text-base font-medium text-green-400 hover:text-green-300 hover:bg-gray-700">Sign In</a>
+            </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative pt-24 pb-20 px-4 sm:px-6 lg:pt-32 lg:pb-28 lg:px-8">
+        <div class="absolute inset-0">
+            <div class="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-black to-transparent"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto">
+            <div class="text-center">
+                <h1 class="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl" data-aos="fade-down" style="font-family: 'Press Start 2P', monospace; text-shadow: 3px 3px 0px #0d4f3c;">
+                    <span class="block xl:inline text-green-400">SAVE THE PLANET</span>
+                    <span class="block text-green-300 xl:inline">BECOME ECO HERO</span>
+                </h1>
+                <p class="mt-3 max-w-md mx-auto text-base text-green-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl" data-aos="fade-down" data-aos-delay="100" style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
+                    EMBARK ON ENVIRONMENTAL QUESTS, EARN ECO XP, AND RISE THROUGH THE GUILD RANKS!
+                </p>
+                <div class="mt-10 sm:flex sm:justify-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="rounded-md shadow">
+                        <a href="games.html" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10 glow-btn" style="font-family: 'Press Start 2P', monospace; font-size: 12px; text-shadow: 2px 2px 0px #0d4f3c;">
+                            🌱 START QUESTS
+                        </a>
+                    </div>
+                    <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
+                        <a href="leaderboard.html" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-green-600 bg-white hover:bg-green-100 md:py-4 md:text-lg md:px-10" style="font-family: 'Press Start 2P', monospace; font-size: 12px; border: 2px solid #2d8f5f;">
+                            🏆 VIEW GUILD
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="py-12 bg-black bg-opacity-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center">
+                <h2 class="text-base text-green-400 font-semibold tracking-wide uppercase" data-aos="fade-down" style="font-family: 'Press Start 2P', monospace; font-size: 10px;">HERO ABILITIES</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl" data-aos="fade-down" data-aos-delay="100" style="font-family: 'Press Start 2P', monospace; text-shadow: 2px 2px 0px #0d4f3c;">
+                    WHY JOIN ECO QUEST?
+                </p>
+            </div>
+
+            <div class="mt-10">
+                <div class="space-y-10 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10">
+                    <div class="relative bg-gray-900 p-6 rounded-xl border-2 border-green-600" data-aos="fade-up" data-aos-delay="100" style="box-shadow: 0 0 20px rgba(45, 143, 95, 0.3);">
+                        <div class="absolute -top-5 left-6 bg-gradient-to-r from-green-500 to-green-600 p-3 rounded-lg shadow-lg" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%);">
+                            <i data-feather="award" class="text-white"></i>
+                        </div>
+                        <h3 class="mt-8 text-lg font-medium text-green-400" style="font-family: 'Press Start 2P', monospace; font-size: 12px;">LEVEL UP SYSTEM</h3>
+                        <p class="mt-2 text-base text-green-300" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
+                            EARN ECO XP AND LEVEL UP AS YOU COMPLETE ENVIRONMENTAL QUESTS!
+                        </p>
+                    </div>
+
+                    <div class="relative bg-gray-900 p-6 rounded-xl border-2 border-green-600" data-aos="fade-up" data-aos-delay="200" style="box-shadow: 0 0 20px rgba(45, 143, 95, 0.3);">
+                        <div class="absolute -top-5 left-6 bg-gradient-to-r from-green-500 to-green-600 p-3 rounded-lg shadow-lg" style="clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);">
+                            <i data-feather="bar-chart-2" class="text-white"></i>
+                        </div>
+                        <h3 class="mt-8 text-lg font-medium text-green-400" style="font-family: 'Press Start 2P', monospace; font-size: 12px;">HERO STATS</h3>
+                        <p class="mt-2 text-base text-green-300" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
+                            TRACK YOUR ECO HERO PROGRESS AND RANK AGAINST OTHER GUILD MEMBERS!
+                        </p>
+                    </div>
+
+                    <div class="relative bg-gray-900 p-6 rounded-xl border-2 border-green-600" data-aos="fade-up" data-aos-delay="300" style="box-shadow: 0 0 20px rgba(45, 143, 95, 0.3);">
+                        <div class="absolute -top-5 left-6 bg-gradient-to-r from-green-500 to-green-600 p-3 rounded-lg shadow-lg" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%);">
+                            <i data-feather="users" class="text-white"></i>
+                        </div>
+                        <h3 class="mt-8 text-lg font-medium text-green-400" style="font-family: 'Press Start 2P', monospace; font-size: 12px;">GUILD SYSTEM</h3>
+                        <p class="mt-2 text-base text-green-300" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
+                            JOIN THE ECO GUILD AND COMPETE ON THE LEADERBOARD TO SHOWCASE YOUR SKILLS!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-gradient-to-r from-green-900 to-green-800" style="border-top: 3px solid #2d8f5f; border-bottom: 3px solid #2d8f5f;">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
+            <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl" data-aos="fade-right" style="font-family: 'Press Start 2P', monospace; text-shadow: 3px 3px 0px #0d4f3c;">
+                <span class="block text-green-400">READY FOR YOUR QUEST?</span>
+                <span class="block text-green-300">BEGIN THE ECO ADVENTURE!</span>
+            </h2>
+            <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0" data-aos="fade-left">
+                <div class="inline-flex rounded-md shadow">
+                    <a href="games.html" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-green-600 bg-white hover:bg-green-50 glow-btn" style="font-family: 'Press Start 2P', monospace; font-size: 12px; border: 2px solid #2d8f5f;">
+                        🌱 START QUEST
+                        <i data-feather="arrow-right" class="ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+            <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+                <div class="space-y-8 xl:col-span-1">
+                    <span class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-green-500 to-sky-400" style="font-family: 'Press Start 2P', monospace; text-shadow: 2px 2px 0px #0d4f3c;">EcoLearn</span>
+                    <p class="text-green-300 text-base" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
+                        SAVING THE PLANET THROUGH ENVIRONMENTAL RPG ADVENTURES!
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i data-feather="twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i data-feather="facebook"></i>
+                        </a>
+                        <a href="https://instagram.com/vaktae._" target="_blank" class="text-gray-400 hover:text-white">
+                            <i data-feather="instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
+                    <div class="md:grid md:grid-cols-2 md:gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                                Navigation
+                            </h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="index.html" class="text-base text-gray-300 hover:text-white">
+                                        Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="games.html" class="text-base text-gray-300 hover:text-white">
+                                        Games
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="profile.html" class="text-base text-gray-300 hover:text-white">
+                                        Profile
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-12 md:mt-0">
+                            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                                Legal
+                            </h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="privacy.html" class="text-base text-gray-300 hover:text-white">
+                                        Privacy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="terms.html" class="text-base text-gray-300 hover:text-white">Terms</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2 md:gap-8">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                                Resources
+                            </h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="tips.html" class="text-base text-gray-300 hover:text-white">Hygiene Tips</a>
+                                </li>
+                                <li>
+                                    <a href="guidelines.html" class="text-base text-gray-300 hover:text-white">Health Guidelines</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-12 md:mt-0">
+                            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                                Support
+                            </h3>
+                            <ul class="mt-4 space-y-4">
+                                <li>
+                                    <a href="contact.html" class="text-base text-gray-300 hover:text-white">Contact</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-base text-gray-300 hover:text-white">
+                                        FAQ
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-800 pt-8">
+                <p class="text-base text-gray-400 text-center">
+                    &copy; 2025 EcoLearn for SIH .All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init();
+        feather.replace();
+        
+        // Mobile menu toggle
+        document.querySelector('[aria-controls="mobile-menu"]').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Sync header XP/Level and avatar from profile (localStorage)
+        (function syncHeaderFromStorage(){
+            try {
+                const storedXp = localStorage.getItem('xp');
+                const storedLevel = localStorage.getItem('level');
+                const storedAvatar = localStorage.getItem('profileAvatar');
+                const storedName = localStorage.getItem('profileName');
+                const isSignedIn = localStorage.getItem('isSignedIn') === 'true';
+
+                const xp = storedXp !== null ? parseInt(storedXp, 10) : 0;
+                const level = storedLevel !== null ? parseInt(storedLevel, 10) : 1;
+
+                const xpSpan = document.getElementById('xp-home');
+                const lvlSpan = document.getElementById('level-home');
+                const mobileXpSpan = document.getElementById('mobile-xp');
+                const mobileLvlSpan = document.getElementById('mobile-level');
+                if (xpSpan) xpSpan.textContent = isNaN(xp) ? 0 : xp;
+                if (lvlSpan) lvlSpan.textContent = isNaN(level) ? 1 : level;
+                if (mobileXpSpan) mobileXpSpan.textContent = isNaN(xp) ? 0 : xp;
+                if (mobileLvlSpan) mobileLvlSpan.textContent = isNaN(level) ? 1 : level;
+
+                // Update profile picture and name
+                if (storedAvatar) {
+                    document.querySelectorAll('nav img[alt="Profile"]').forEach(img => img.src = storedAvatar);
+                }
+                if (storedName) {
+                    const mobileNameEl = document.querySelector('#mobile-menu .text-base.font-medium.text-white');
+                    if (mobileNameEl) mobileNameEl.textContent = storedName;
+                }
+
+                // Update sign-in link based on authentication status
+                const signInLinks = document.querySelectorAll('a[href="signin.html"]');
+                signInLinks.forEach(link => {
+                    if (isSignedIn) {
+                        link.textContent = 'Sign Out';
+                        link.href = '#';
+                        link.onclick = function(e) {
+                            e.preventDefault();
+                            localStorage.removeItem('isSignedIn');
+                            localStorage.removeItem('userName');
+                            localStorage.removeItem('userEmail');
+                            localStorage.removeItem('userPicture');
+                            localStorage.removeItem('profileName');
+                            localStorage.removeItem('profileAvatar');
+                            location.reload();
+                        };
+                    } else {
+                        link.textContent = 'Sign In';
+                        link.href = 'signin.html';
+                        link.onclick = null;
+                    }
+                });
+            } catch (e) { /* ignore */ }
+        })();
+    </script>
+</body>
+</html>

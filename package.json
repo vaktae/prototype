@@ -1,0 +1,20 @@
+{
+  "name": "mywebsite",
+  "version": "1.0.0",
+  "description": "EcoLearn - A hygiene education website",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 3001 -o",
+    "dev": "npx live-server --port=3000 --open=/index.html",
+    "build": "echo 'No build process needed for static site'",
+    "serve": "npx serve -s . -l 3000"
+  },
+  "keywords": ["hygiene", "education", "quiz", "learning"],
+  "author": "EcoLearn Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1"
+  }
+}

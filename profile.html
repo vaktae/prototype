@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | EcoLearn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap');
+        body {
+            font-family: 'Orbitron', monospace;
+            background: 
+                linear-gradient(45deg, #0d4f3c 0%, #1a6b4f 25%, #2d8f5f 50%, #1a6b4f 75%, #0d4f3c 100%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="pixel" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="%230d4f3c"/><rect width="5" height="5" fill="%231a6b4f"/><rect x="5" y="5" width="5" height="5" fill="%231a6b4f"/></pattern></defs><rect width="100" height="100" fill="url(%23pixel)"/></svg>');
+            background-size: 100% 100%, 20px 20px;
+            color: #f5f5f5;
+            image-rendering: pixelated;
+        }
+        .profile-card {
+            background: linear-gradient(145deg, rgba(13, 79, 60, 0.8), rgba(26, 107, 79, 0.6));
+            border: 3px solid #2d8f5f;
+            box-shadow: 
+                0 0 20px rgba(45, 143, 95, 0.3),
+                inset 0 0 20px rgba(26, 107, 79, 0.2);
+        }
+        .edit-btn {
+            transition: all 0.3s ease;
+        }
+        .edit-btn:hover {
+            transform: translateY(-2px);
+        }
+        .xp-bar {
+            height: 10px;
+            border-radius: 0;
+            background: linear-gradient(90deg, #2d8f5f 0%, #1a6b4f 100%);
+            border: 1px solid #0d4f3c;
+        }
+        #profile-pic-upload {
+            display: none;
+        }
+        .profile-pic-container:hover .profile-pic-overlay {
+            opacity: 1;
+        }
+        .guest-edit-btn {
+            animation: pulse-guest 2s infinite;
+        }
+        @keyframes pulse-guest {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="bg-black bg-opacity-80 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="index.html" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-green-500 to-sky-400" style="font-family: 'Press Start 2P', monospace; text-shadow: 2px 2px 0px #0d4f3c;">EcoLearn</a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="index.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                            <a href="games.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"><i data-feather="gamepad-2" class="w-4 h-4 mr-1 inline"></i> Games</a>
+                            <a href="profile.html" class="text-white px-3 py-2 rounded-md text-sm font-medium"><i data-feather="user" class="w-4 h-4 mr-1 inline"></i> Profile</a>
+                            <a href="leaderboard.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Leaderboard</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <div class="ml-3 relative">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium">XP: <span id="xp-home">0</span></span>
+                                <span class="text-sm font-medium text-yellow-400">Level: <span id="level-home">1</span></span>
+                                <a href="profile.html"><img class="h-8 w-8 rounded-full" src="http://static.photos/people/200x200/1" alt="Profile"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" class="bg-gray-900 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
+                        <i data-feather="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="games.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Games</a>
+                <a href="profile.html" class="text-white block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+                <a href="leaderboard.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Leaderboard</a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-700">
+                <div class="flex items-center px-5">
+                    <div class="flex-shrink-0">
+                        <img class="h-10 w-10 rounded-full" src="http://static.photos/people/200x200/1" alt="Profile">
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium text-white">Guest</div>
+                        <div class="text-sm font-medium text-gray-400">Level <span id="mobile-level">1</span></div>
+                    </div>
+                </div>
+                <div class="mt-3 px-2 space-y-1">
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">XP: <span id="mobile-xp">0</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Section -->
+    <div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <div class="profile-card rounded-xl p-6 mb-8" data-aos="fade-up">
+            <div class="flex flex-col md:flex-row items-center md:items-start">
+                <!-- Profile Picture -->
+                <div class="relative mb-6 md:mb-0 md:mr-8 profile-pic-container">
+                    <img id="profile-pic" class="w-32 h-32 rounded-full object-cover border-4 border-blue-600" src="http://static.photos/people/200x200/1" alt="Profile">
+                    <div class="profile-pic-overlay absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 transition-opacity duration-300">
+                        <label for="profile-pic-upload" class="cursor-pointer text-white">
+                            <i data-feather="edit" class="w-6 h-6"></i>
+                        </label>
+                    </div>
+                    <input type="file" id="profile-pic-upload" accept="image/*">
+                </div>
+                
+                <!-- Profile Info -->
+                <div class="flex-1 w-full">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h1 id="profile-name" class="text-2xl font-bold">Guest User</h1>
+                            <p id="profile-title" class="text-blue-400 font-medium">Hygiene Explorer</p>
+                        </div>
+                        <button id="edit-profile-btn" class="edit-btn px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 flex items-center">
+                            <i data-feather="edit" class="w-4 h-4 mr-2"></i> Edit
+                        </button>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p id="profile-bio" class="text-gray-300">I'm passionate about learning and maintaining good hygiene practices to stay healthy!</p>
+                    </div>
+                    
+                    <!-- Edit Form (Hidden by default) -->
+                    <div id="edit-form" class="hidden">
+                        <div class="mb-4">
+                            <label for="name-input" class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                            <input type="text" id="name-input" class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="title-select" class="block text-sm font-medium text-gray-300 mb-1">Title</label>
+                            <select id="title-select" class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                            <p id="title-help" class="mt-2 text-xs text-gray-400">Unlock more titles by leveling up.</p>
+                        </div>
+                        <div class="mb-4">
+                            <label for="bio-input" class="block text-sm font-medium text-gray-300 mb-1">Bio</label>
+                            <textarea id="bio-input" rows="3" class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div class="flex justify-end space-x-3">
+                            <button id="cancel-edit-btn" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600">
+                                Cancel
+                            </button>
+                            <button id="save-profile-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                        <div class="bg-gray-900 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-blue-400">3</div>
+                            <div class="text-sm text-gray-400">Level</div>
+                        </div>
+                        <div class="bg-gray-900 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-purple-400">250</div>
+                            <div class="text-sm text-gray-400">XP</div>
+                        </div>
+                        <div class="bg-gray-900 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-green-400">15</div>
+                            <div class="text-sm text-gray-400">Quizzes</div>
+                        </div>
+                        <div class="bg-gray-900 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-yellow-400">85%</div>
+                            <div class="text-sm text-gray-400">Accuracy</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- XP Progress -->
+        <div class="profile-card rounded-xl p-6 mb-8" data-aos="fade-up" data-aos-delay="100">
+            <h2 class="text-xl font-bold mb-4">Progress to Next Level</h2>
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-300">Level 3 (250/300 XP)</span>
+                <span class="text-sm font-medium text-blue-400">50 XP needed</span>
+            </div>
+            <div class="w-full bg-gray-800 rounded-full h-2.5">
+                <div class="xp-bar h-2.5 rounded-full" style="width: 83%"></div>
+            </div>
+        </div>
+        
+        <!-- Badges -->
+        <div class="profile-card rounded-xl p-6" data-aos="fade-up" data-aos-delay="200">
+            <h2 class="text-xl font-bold mb-6">Achievements</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div class="bg-gray-900 p-4 rounded-lg text-center border border-yellow-500">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-yellow-500 rounded-full flex items-center justify-center">
+                        <i data-feather="award" class="text-white w-8 h-8"></i>
+                    </div>
+                    <div class="font-medium">Quick Learner</div>
+                    <div class="text-xs text-gray-400">Complete 5 quizzes</div>
+                </div>
+                <div class="bg-gray-900 p-4 rounded-lg text-center border border-blue-500">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i data-feather="star" class="text-white w-8 h-8"></i>
+                    </div>
+                    <div class="font-medium">Hygiene Pro</div>
+                    <div class="text-xs text-gray-400">Score 90%+ accuracy</div>
+                </div>
+                <div class="bg-gray-900 p-4 rounded-lg text-center border border-gray-500 opacity-50">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-gray-500 rounded-full flex items-center justify-center">
+                        <i data-feather="lock" class="text-white w-8 h-8"></i>
+                    </div>
+                    <div class="font-medium">Master Cleaner</div>
+                    <div class="text-xs text-gray-400">Complete 20 quizzes</div>
+                </div>
+                <div class="bg-gray-900 p-4 rounded-lg text-center border border-gray-500 opacity-50">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-gray-500 rounded-full flex items-center justify-center">
+                        <i data-feather="lock" class="text-white w-8 h-8"></i>
+                    </div>
+                    <div class="font-medium">Perfect Score</div>
+                    <div class="text-xs text-gray-400">Score 100% on a quiz</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400 text-sm">
+                &copy; 2025 EcoLearn For SIH
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init();
+        feather.replace();
+        
+        // Mobile menu toggle
+        document.querySelector('[aria-controls="mobile-menu"]').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Profile editing
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const editForm = document.getElementById('edit-form');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
+        const nameInput = document.getElementById('name-input');
+        const titleSelect = document.getElementById('title-select');
+        const bioInput = document.getElementById('bio-input');
+        const profileName = document.getElementById('profile-name');
+        const profileTitle = document.getElementById('profile-title');
+        const profileBio = document.getElementById('profile-bio');
+        const profilePic = document.getElementById('profile-pic');
+        const profilePicUpload = document.getElementById('profile-pic-upload');
+
+        function getCurrentLevel() {
+            try {
+                const storedLevel = localStorage.getItem('level');
+                const level = storedLevel !== null ? parseInt(storedLevel, 10) : 1;
+                return isNaN(level) ? 3 : level;
+            } catch (e) { return 3; }
+        }
+
+        const ALL_TITLES = [
+            { value: 'Hygiene Explorer', label: 'Hygiene Explorer', requiredLevel: 0 },
+            { value: 'Cleanliness Champion', label: 'Cleanliness Champion', requiredLevel: 0 },
+            { value: 'Health Enthusiast', label: 'Health Enthusiast', requiredLevel: 0 },
+            { value: 'Sanitation Specialist', label: 'Sanitation Specialist', requiredLevel: 4 },
+            { value: 'Eco Warrior', label: 'Eco Warrior', requiredLevel: 5 },
+            { value: 'Hygiene Pro', label: 'Hygiene Pro', requiredLevel: 6 },
+            { value: 'Community Mentor', label: 'Community Mentor', requiredLevel: 8 },
+            { value: 'Master Cleaner', label: 'Master Cleaner', requiredLevel: 10 },
+        ];
+
+        function populateTitleSelect() {
+            if (!titleSelect) return;
+            const level = getCurrentLevel();
+            titleSelect.innerHTML = '';
+            ALL_TITLES.forEach(t => {
+                const opt = document.createElement('option');
+                const locked = level < t.requiredLevel;
+                opt.value = t.value;
+                opt.textContent = locked ? `${t.label} (Unlock at Level ${t.requiredLevel})` : t.label;
+                opt.disabled = locked;
+                titleSelect.appendChild(opt);
+            });
+        }
+
+        function loadProfileFromStorage() {
+            try {
+                const storedName = localStorage.getItem('profileName');
+                const storedTitle = localStorage.getItem('profileTitle');
+                const storedBio = localStorage.getItem('profileBio');
+                const storedAvatar = localStorage.getItem('profileAvatar');
+                populateTitleSelect();
+                if (storedName) profileName.textContent = storedName;
+                if (storedTitle) {
+                    profileTitle.textContent = storedTitle;
+                    if (titleSelect) {
+                        // If stored title exists but currently locked (level dropped), keep showing but selection disabled
+                        const option = Array.from(titleSelect.options).find(o => o.value === storedTitle);
+                        if (option) titleSelect.value = storedTitle;
+                    }
+                }
+                if (storedBio) profileBio.textContent = storedBio;
+                if (storedAvatar) {
+                    profilePic.src = storedAvatar;
+                    // Update navbar avatars
+                    document.querySelectorAll('nav img[alt="Profile"]').forEach(img => img.src = storedAvatar);
+                }
+                // Update mobile name if available
+                const mobileNameEl = document.querySelector('#mobile-menu .text-base.font-medium.text-white');
+                if (mobileNameEl && storedName) mobileNameEl.textContent = storedName;
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        loadProfileFromStorage();
+        
+
+        // Check if user is a guest and show welcome message
+        function checkGuestStatus() {
+            const isSignedIn = localStorage.getItem('isSignedIn') === 'true';
+            const profileName = localStorage.getItem('profileName') || 'Guest User';
+            
+            if (!isSignedIn && profileName === 'Guest User') {
+                // Show a welcome message for guest users
+                const welcomeMessage = document.createElement('div');
+                welcomeMessage.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-blue-900 bg-opacity-90 backdrop-blur-md border border-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md text-center';
+                welcomeMessage.innerHTML = `
+                    <div class="flex items-center justify-center mb-2">
+                        <i data-feather="user-plus" class="w-5 h-5 mr-2"></i>
+                        <span class="font-semibold">Welcome, Guest!</span>
+                    </div>
+                    <p class="text-sm text-blue-200">Customize your profile to get started. Click "Edit" to personalize your information.</p>
+                    <button onclick="this.parentElement.remove()" class="mt-2 text-blue-300 hover:text-white text-xs underline">Got it!</button>
+                `;
+                document.body.appendChild(welcomeMessage);
+                feather.replace();
+                
+                // Auto-remove after 8 seconds
+                setTimeout(() => {
+                    if (welcomeMessage.parentElement) {
+                        welcomeMessage.remove();
+                    }
+                }, 8000);
+            }
+        }
+
+        checkGuestStatus();
+
+        // Add pulsing animation to edit button for guest users
+        function addGuestEditAnimation() {
+            const isSignedIn = localStorage.getItem('isSignedIn') === 'true';
+            const profileName = localStorage.getItem('profileName') || 'Guest User';
+            
+            if (!isSignedIn && profileName === 'Guest User') {
+                const editBtn = document.getElementById('edit-profile-btn');
+                if (editBtn) {
+                    editBtn.classList.add('guest-edit-btn');
+                    editBtn.innerHTML = '<i data-feather="edit" class="w-4 h-4 mr-2"></i> Customize Profile';
+                }
+            }
+        }
+
+        addGuestEditAnimation();
+
+        // Populate header XP/Level from localStorage (consistency)
+        (function populateHeaderStats() {
+            try {
+                const storedXp = localStorage.getItem('xp');
+                const storedLevel = localStorage.getItem('level');
+                const xp = storedXp !== null ? parseInt(storedXp, 10) : 250;
+                const level = storedLevel !== null ? parseInt(storedLevel, 10) : 1;
+                const xpSpan = document.getElementById('xp-home');
+                const lvlSpan = document.getElementById('level-home');
+                const mobileXpSpan = document.getElementById('mobile-xp');
+                const mobileLvlSpan = document.getElementById('mobile-level');
+                if (xpSpan) xpSpan.textContent = isNaN(xp) ? 250 : xp;
+                if (lvlSpan) lvlSpan.textContent = isNaN(level) ? 3 : level;
+                if (mobileXpSpan) mobileXpSpan.textContent = isNaN(xp) ? 250 : xp;
+                if (mobileLvlSpan) mobileLvlSpan.textContent = isNaN(level) ? 3 : level;
+            } catch (e) { /* ignore */ }
+        })();
+
+        editProfileBtn.addEventListener('click', function() {
+            // Fill form with current values
+            nameInput.value = profileName.textContent;
+            populateTitleSelect();
+            // Try to select current title if available
+            if (titleSelect) {
+                const current = profileTitle.textContent;
+                const found = Array.from(titleSelect.options).find(o => o.value === current);
+                if (found) titleSelect.value = current;
+            }
+            bioInput.value = profileBio.textContent;
+            
+            // Show form and hide normal display
+            editForm.classList.remove('hidden');
+            profileName.parentElement.classList.add('hidden');
+            profileBio.classList.add('hidden');
+            editProfileBtn.classList.add('hidden');
+        });
+
+        cancelEditBtn.addEventListener('click', function() {
+            editForm.classList.add('hidden');
+            profileName.parentElement.classList.remove('hidden');
+            profileBio.classList.remove('hidden');
+            editProfileBtn.classList.remove('hidden');
+        });
+
+        saveProfileBtn.addEventListener('click', function() {
+            // Update profile with new values
+            profileName.textContent = nameInput.value || 'Guest User';
+            if (titleSelect) {
+                const selected = titleSelect.options[titleSelect.selectedIndex];
+                // If somehow a locked option is selected (shouldn't happen), fallback
+                const chosenValue = selected && !selected.disabled ? selected.value : 'Hygiene Explorer';
+                profileTitle.textContent = chosenValue;
+            }
+            profileBio.textContent = bioInput.value || 'I\'m passionate about learning and maintaining good hygiene practices to stay healthy!';
+            // Persist to localStorage
+            try {
+                localStorage.setItem('profileName', profileName.textContent);
+                localStorage.setItem('profileTitle', profileTitle.textContent);
+                localStorage.setItem('profileBio', profileBio.textContent);
+            } catch (e) { /* ignore */ }
+            
+            // Hide form and show normal display
+            editForm.classList.add('hidden');
+            profileName.parentElement.classList.remove('hidden');
+            profileBio.classList.remove('hidden');
+            editProfileBtn.classList.remove('hidden');
+
+            // Reflect updates in nav/mobile immediately
+            const mobileNameEl = document.querySelector('#mobile-menu .text-base.font-medium.text-white');
+            if (mobileNameEl) mobileNameEl.textContent = profileName.textContent;
+        });
+
+        // Profile picture upload
+        profilePicUpload.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    profilePic.src = event.target.result;
+                    // Persist avatar immediately
+                    try {
+                        localStorage.setItem('profileAvatar', event.target.result);
+                    } catch (e) { /* ignore */ }
+                    // Update navbar avatars
+                    document.querySelectorAll('nav img[alt="Profile"]').forEach(img => img.src = event.target.result);
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+    </script>
+</body>
+</html>
